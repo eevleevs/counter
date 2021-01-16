@@ -1,0 +1,15 @@
+body {
+    text-align: center;
+}
+
+#chart {
+    width: 100%;
+}
+
+table {
+    margin: 0 auto;
+}
+
+td {
+    padding: 0.25em;
+}
