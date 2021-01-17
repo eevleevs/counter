@@ -105,7 +105,7 @@
 			}
 		})
 		
-		let gun = Gun('https://ivlivs.it/gun').get('giulio.malventi@gmail.com')
+		let gun = Gun(window.location.href).get('giulio.malventi@gmail.com')
 		period = gun.get('period')
 		period.on(v => {
 			periodValue = v.value
