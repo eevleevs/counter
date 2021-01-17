@@ -1,5 +1,9 @@
-__sapper__
 radata
+.DS_Store
+/node_modules/
+/src/node_modules/@sapper/
+yarn-error.log
+/__sapper__/
 
 # Logs
 logs
