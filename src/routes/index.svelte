@@ -1,5 +1,5 @@
 <script>
-	import {Chart} from 'Chart.js'
+	import {Chart} from 'chart.js'
 	import {onMount} from 'svelte'
 
 	// globals
@@ -18,10 +18,17 @@
 		grey: 'rgb(201, 203, 207)'
 	}
 
+	let gun
 	let period
 	let periodValue = 'd'
 	let counters
 	let countersDict = {}
+
+	// login
+	let user = {is: null}
+	let username
+	let password
+	let loginMessage = 'User will be created if non existing.<br>There is no password recovery, make sure to save the details!'
 
 
 	function newCounter(name) {
@@ -105,8 +112,13 @@
 			}
 		})
 		
-		let gun = Gun(window.location.href).get('giulio.malventi@gmail.com')
+		gun = Gun()
+		user = gun().user()
 		period = gun.get('period')
+		period.once(v => {
+			if (!v)
+				period.put({value: 'd'})
+		})
 		period.on(v => {
 			periodValue = v.value
 			ms_period = ms_day * {
@@ -135,32 +147,43 @@
 </script>
 
 <div class="container-fluid">
-	<div class="row">
-		<div class="col-sm-8">
-			<div><canvas id="chart"></canvas></div>
-		</div>
-		<div class="col">
-			<div class="mt-2">
-				{#each ['d', 'w', 'm', 'y'] as value}
-					<button 
-						on:click="{period.put({value: value})}" 
-						class="btn m-1"
-						class:btn-secondary="{periodValue == value}"
-						class:btn-outline-secondary="{periodValue != value}"
-					>{value}</button>
-				{/each}
+	{#if user.is}
+		<div class="row">
+			<div class="col-sm-8">
+				<div><canvas id="chart"></canvas></div>
 			</div>
-			<table id="counters" class="mt-2">
-				{#each Object.entries(countersDict) as [key, name]}
-					<tr id="{key}">
-						<td>{name}</td>
-						<td><button on:click="{counters.get(key).set(Date.now())}" class="btn btn-primary btn-floating"><i class="fas fa-plus"></i></button></td>
-						<td><button on:click="{decreaseCounter(key)}" class="btn btn-primary btn-floating"><i class="fas fa-minus"></i></button></td>
-						<td><button on:click="{removeCounter(key)}" class="btn btn-primary btn-floating"><i class="fas fa-times"></i></button></td>
-					</tr>					
-				{/each}
-			</table>
-			<button on:click="{newCounter}" class="btn btn-secondary m-3">new</button>
+			<div class="col">
+				<div class="mt-2">
+					{#each ['d', 'w', 'm', 'y'] as value}
+						<button 
+							on:click="{period.put({value: value})}" 
+							class="btn m-1"
+							class:btn-secondary="{periodValue == value}"
+							class:btn-outline-secondary="{periodValue != value}"
+						>{value}</button>
+					{/each}
+				</div>
+				<table id="counters" class="mt-2">
+					{#each Object.entries(countersDict) as [key, name]}
+						<tr id="{key}">
+							<td>{name}</td>
+							<td><button on:click="{counters.get(key).set(Date.now())}" class="btn btn-primary btn-floating"><i class="fas fa-plus"></i></button></td>
+							<td><button on:click="{decreaseCounter(key)}" class="btn btn-primary btn-floating"><i class="fas fa-minus"></i></button></td>
+							<td><button on:click="{removeCounter(key)}" class="btn btn-primary btn-floating"><i class="fas fa-times"></i></button></td>
+						</tr>					
+					{/each}
+				</table>
+				<button on:click="{newCounter}" class="btn btn-secondary m-3">new</button>
+			</div>
 		</div>
-	</div>
+	{:else}
+		<div class="row">
+			<div class="col">
+				<input type="text" bind:value="{username}" placeholder="user name"><br>
+				<input type="password" bind:value="{password}" placeholder="password"><br>
+				<div>{loginMessage}</div>
+				<button class="btn btn-primary">log in</button>
+			</div>
+		</div>
+	{/if}
 </div>

@@ -1,9 +1,9 @@
 {
-	"background_color": "#ffffff",
+	"background_color": "#000000",
 	"theme_color": "#333333",
-	"name": "TODO",
-	"short_name": "TODO",
-	"display": "minimal-ui",
+	"name": "Counter",
+	"short_name": "Counter",
+	"display": "standalone",
 	"start_url": "/",
 	"icons": [
 		{
