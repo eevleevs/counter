@@ -84,7 +84,6 @@
 
 
 	function logIn() {
-		values = {}
 		user.auth(username, password, at => {
 			if (at.ack) 
 				initDB()
@@ -99,6 +98,7 @@
 		user.leave()
 		user = user
 		credentials.set([])
+		values = {}
 		updateChart()
 	}
 
