@@ -10,6 +10,7 @@
 	let ms_period = null
 	let values = {}
 
+	// chart
 	let chart 
 	let chartColors = {
 		red: 'rgb(255, 99, 132)',
@@ -21,6 +22,7 @@
 		grey: 'rgb(201, 203, 207)'
 	}
 
+	// business
 	let gun
 	let period
 	let periodValue = 'd'
@@ -66,7 +68,7 @@
 			updateChart()
 		})
 		
-		counters = user.get('counters').put({})
+		counters = user.get('counters')
 		countersDict = {}
 		counters.map().on((v,k) => {
 			if (v) {
@@ -99,6 +101,7 @@
 		user.leave()
 		user = user
 		credentials.set([])
+		updateChart()
 	}
 
 
@@ -179,11 +182,6 @@
 	})
 </script>
 
-<style>
-	.hidden {
-		display: none;
-	}
-</style>
 
 <div class="container-fluid">
 	<div class="row" class:hidden="{!user.is}">
