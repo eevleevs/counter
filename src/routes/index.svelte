@@ -69,11 +69,10 @@
 		})
 		
 		counters = user.get('counters')
-		countersDict = {}
 		counters.map().on((v,k) => {
-			if (v) {
+			if (v && v.name) {
 				countersDict[k] = v.name
-				values[v.name] = Object.values(v).splice(2).filter(v => v || null)
+				values[v.name] = Object.values(v).splice(1).filter(v => v || null)
 			} else {
 				delete countersDict[k]
 				countersDict = countersDict
@@ -98,6 +97,7 @@
 		user.leave()
 		user = user
 		credentials.set([])
+		countersDict = {}
 		values = {}
 		updateChart()
 	}
