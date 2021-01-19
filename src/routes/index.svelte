@@ -89,9 +89,7 @@
 			if (at.ack) 
 				initDB()
 			else
-				user.create(username, password, () => 
-					user.auth(username, password, initDB)
-				)
+				user.create(username, password, initDB)
 		})
 		credentials.set([username, password])
 	}
