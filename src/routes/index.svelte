@@ -1,8 +1,11 @@
 <script>
-	import {Chart} from 'chart.js'
-	import {onMount} from 'svelte'
+	import { Chart } from 'chart.js'
+	import { onMount } from 'svelte'
+	import { get } from 'svelte/store'
+	import { writable } from 'svelte-persistent-store/dist/local'
 
 	// globals
+	let starting = true
 	let ms_day = 86400000
 	let ms_period = null
 	let values = {}
@@ -25,22 +28,10 @@
 	let countersDict = {}
 
 	// login
-	let user = {is: null}
-	let username
-	let password
-	let loginMessage = 'User will be created if non existing.<br>There is no password recovery, make sure to save the details!'
-
-
-	function newCounter(name) {
-		var name = prompt('enter name of the counter')
-		if (!name)
-			return
-		if (Object.values(countersDict).includes(name)) {
-			alert('already present')
-			return
-		}
-		counters.set({name: name})
-	}
+	let user = {}
+	let credentials = writable('credentials', [])
+	let [username, password] = get(credentials)
+	let loginMessage = 'User will be created if not existing<br>There is <u>no</u> password recovery'
 
 
 	function decreaseCounter(key) {
@@ -52,6 +43,74 @@
 					break
 				}
 		})
+	}
+
+
+	function initDB() {
+		starting = false
+		user = user
+
+		period = user.get('period')
+		period.once(v => {
+			if (typeof v == 'undefined')
+				period.put({value: 'd'})
+		})
+		period.on(v => {
+			periodValue = v.value
+			ms_period = ms_day * {
+				d: 1,
+				w: 7,
+				m: 30,
+				y: 365
+			}[v.value]
+			updateChart()
+		})
+		
+		counters = user.get('counters').put({})
+		countersDict = {}
+		counters.map().on((v,k) => {
+			if (v) {
+				countersDict[k] = v.name
+				values[v.name] = Object.values(v).splice(2).filter(v => v || null)
+			} else {
+				delete countersDict[k]
+				countersDict = countersDict
+			}
+			updateChart()
+		})		
+	}
+
+
+	function logIn() {
+		values = {}
+		user.auth(username, password, at => {
+			if (at.ack) 
+				initDB()
+			else
+				user.create(username, password, () => 
+					user.auth(username, password, initDB)
+				)
+		})
+		credentials.set([username, password])
+	}
+
+
+	function logOut() {
+		user.leave()
+		user = user
+		credentials.set([])
+	}
+
+
+	function newCounter(name) {
+		var name = prompt('enter name of the counter')
+		if (!name)
+			return
+		if (Object.values(countersDict).includes(name)) {
+			alert('already present')
+			return
+		}
+		counters.set({name: name})
 	}
 
 
@@ -95,7 +154,6 @@
 
 
 	onMount(() => {
-
 		chart = new Chart('chart', {
 			type: 'line',
 			data: {},
@@ -112,77 +170,61 @@
 			}
 		})
 		
-		gun = Gun()
-		user = gun().user()
-		period = gun.get('period')
-		period.once(v => {
-			if (!v)
-				period.put({value: 'd'})
-		})
-		period.on(v => {
-			periodValue = v.value
-			ms_period = ms_day * {
-				d: 1,
-				w: 7,
-				m: 30,
-				y: 365
-			}[v.value]
-			updateChart()
-		})	
-		
-		counters = gun.get('counters')
-		countersDict = {}
-		counters.map().on((v,k) => {
-			if (v) {
-				countersDict[k] = v.name
-				values[v.name] = Object.values(v).splice(2).filter(v => v || null)
-			} else {
-				delete countersDict[k]
-				countersDict = countersDict
-			}
-			updateChart()
-		})
-	
+		let loc = window.location
+		gun = Gun(`${loc.protocol}${loc.hostname}:${parseInt(loc.port)+1}/gun`)
+		user = gun.user()
+		if (username && password)
+			logIn()
+		else
+			starting = false
 	})
 </script>
 
+<style>
+	.hidden {
+		display: none;
+	}
+</style>
+
 <div class="container-fluid">
-	{#if user.is}
-		<div class="row">
-			<div class="col-sm-8">
-				<div><canvas id="chart"></canvas></div>
-			</div>
-			<div class="col">
-				<div class="mt-2">
-					{#each ['d', 'w', 'm', 'y'] as value}
-						<button 
-							on:click="{period.put({value: value})}" 
-							class="btn m-1"
-							class:btn-secondary="{periodValue == value}"
-							class:btn-outline-secondary="{periodValue != value}"
-						>{value}</button>
-					{/each}
-				</div>
-				<table id="counters" class="mt-2">
-					{#each Object.entries(countersDict) as [key, name]}
-						<tr id="{key}">
-							<td>{name}</td>
-							<td><button on:click="{counters.get(key).set(Date.now())}" class="btn btn-primary btn-floating"><i class="fas fa-plus"></i></button></td>
-							<td><button on:click="{decreaseCounter(key)}" class="btn btn-primary btn-floating"><i class="fas fa-minus"></i></button></td>
-							<td><button on:click="{removeCounter(key)}" class="btn btn-primary btn-floating"><i class="fas fa-times"></i></button></td>
-						</tr>					
-					{/each}
-				</table>
-				<button on:click="{newCounter}" class="btn btn-secondary m-3">new</button>
-			</div>
+	<div class="row" class:hidden="{!user.is}">
+		<div class="col-sm-8">
+			<div><canvas id="chart"></canvas></div>
 		</div>
-	{:else}
+		<div class="col" align="center">
+			<div class="mt-2">
+				{#each ['d', 'w', 'm', 'y'] as value}
+					<button 
+						on:click="{period.put({value: value})}" 
+						class="btn m-1"
+						class:btn-primary="{periodValue == value}"
+						class:btn-outline-primary="{periodValue != value}"
+					>{value}</button>
+				{/each}
+			</div>
+			<table id="counters" class="m-2">
+				{#each Object.entries(countersDict) as [key, name]}
+					<tr id="{key}">
+						<td>{name}</td>
+						<td><button on:click="{counters.get(key).set(Date.now())}" class="btn btn-secondary btn-floating"><i class="fas fa-plus"></i></button></td>
+						<td><button on:click="{decreaseCounter(key)}" class="btn btn-secondary btn-floating"><i class="fas fa-minus"></i></button></td>
+						<td><button on:click="{removeCounter(key)}" class="btn btn-secondary btn-floating"><i class="fas fa-times"></i></button></td>
+					</tr>					
+				{/each}
+			</table>
+			<button on:click="{newCounter}" class="btn btn-primary m-1">new</button>
+			<button on:click="{logOut}" class="btn btn-primary m-1">log out</button>
+		</div>
+	</div>
+	{#if !starting && !user.is}
 		<div class="row">
-			<div class="col">
-				<input type="text" bind:value="{username}" placeholder="user name"><br>
-				<input type="password" bind:value="{password}" placeholder="password"><br>
-				<div>{loginMessage}</div>
-				<button class="btn btn-primary">log in</button>
+			<div class="col mt-3">
+				<form on:submit|preventDefault="{logIn}">
+					<input class="m-1" type="text" bind:value="{username}" placeholder="user name"><br>
+					<input class="m-1" type="password" bind:value="{password}" placeholder="password"><br>
+					<div class="m-3">{@html loginMessage}</div>
+					<button type="submit" class="btn btn-primary">log in</button>
+				</form>
 			</div>
 		</div>
 	{/if}

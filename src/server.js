@@ -7,8 +7,8 @@ import proxy from 'express-http-proxy';
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
-var server = require('http').createServer().listen(8765);
-var Gun = require('gun');
+const server = require('http').createServer().listen(3001);
+const Gun = require('gun');
 Gun({web: server});
 
 polka() // You can also use Express
@@ -17,7 +17,6 @@ polka() // You can also use Express
 		res.set = res.setHeader.bind(res);
 		next();
 	})
-  	.use('/gun', proxy('http://localhost:8765'))
 	.use(
 		compression({ threshold: 0 }),
 		sirv('static', { dev }),

@@ -69,7 +69,15 @@ export default {
 		onwarn,
 	},
 
-	server: {
+	plugins: [
+		resolve({
+			browser: true,
+				dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/'),
+			preferBuiltins: false
+		}),
+	],
+
+   	server: {
 		input: config.server.input(),
 		output: config.server.output(),
 		plugins: [
