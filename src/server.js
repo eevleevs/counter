@@ -1,16 +1,13 @@
 import sirv from 'sirv';
-import polka from 'polka';
+import express from 'express';
 import compression from 'compression';
 import * as sapper from '@sapper/server';
+import Gun from 'gun'
 
 const { PORT, NODE_ENV } = process.env;
 const dev = NODE_ENV === 'development';
 
-const server = require('http').createServer().listen(3001);
-const Gun = require('gun');
-Gun({web: server});
-
-polka() // You can also use Express
+var server = express() // You can also use Express
 	.use(function(req, res, next) {
 		res.status = code => (res.statusCode = code);
 		res.set = res.setHeader.bind(res);
@@ -21,6 +18,9 @@ polka() // You can also use Express
 		sirv('static', { dev }),
 		sapper.middleware()
 	)
+	.use(Gun.serve)
 	.listen(PORT, err => {
 		if (err) console.log('error', err);
 	});
+
+Gun({web: server});

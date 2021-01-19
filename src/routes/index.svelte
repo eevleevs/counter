@@ -170,8 +170,7 @@
 			}
 		})
 		
-		let loc = window.location
-		gun = Gun(`${loc.protocol}${loc.hostname}:${parseInt(loc.port)+1}/gun`)
+		gun = Gun(`${window.location.origin}/gun`)
 		user = gun.user()
 		if (username && password)
 			logIn()
