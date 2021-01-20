@@ -181,11 +181,13 @@
 </script>
 
 
-<div class="container-fluid m-3">
+<div class="container mt-3">
 	<div class="row" class:hidden="{!user.is}">
 		<div class="col-sm-7">
-			<div><canvas id="chart"></canvas></div>
-			<div class="mt-2">
+			<div id="chart-container" class="m-2">
+				<canvas id="chart"></canvas>
+			</div>
+			<div class="m-2">
 				{#each ['d', 'w', 'm', 'y'] as value}
 					<button 
 						on:click="{period.put({value: value})}" 
@@ -197,8 +199,10 @@
 			</div>
 		</div>
 		<div class="col" align="center">
-			<button on:click="{newCounter}" class="btn btn-primary m-1">new</button>
-			<button on:click="{logOut}" class="btn btn-primary m-1">log out</button>
+			<div class="m-2">
+				<button on:click="{newCounter}" class="btn btn-primary m-1">new</button>
+				<button on:click="{logOut}" class="btn btn-primary m-1">log out</button>
+			</div>
 			<table id="counters" class="m-2">
 				{#each Object.entries(countersDict) as [key, name]}
 					<tr id="{key}">
@@ -213,7 +217,7 @@
 	</div>
 	{#if !starting && !user.is}
 		<div class="row">
-			<div class="col mt-3">
+			<div class="col m-3">
 				<form on:submit|preventDefault="{logIn}">
 					<input class="m-1" type="text" bind:value="{username}" placeholder="user name"><br>
 					<input class="m-1" type="password" bind:value="{password}" placeholder="password"><br>
