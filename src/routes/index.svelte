@@ -183,7 +183,7 @@
 
 <div class="container-fluid m-3">
 	<div class="row" class:hidden="{!user.is}">
-		<div class="col-sm-8">
+		<div class="col-sm-7">
 			<div><canvas id="chart"></canvas></div>
 			<div class="mt-2">
 				{#each ['d', 'w', 'm', 'y'] as value}
