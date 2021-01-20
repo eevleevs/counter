@@ -183,7 +183,7 @@
 
 <div class="container mt-3">
 	<div class="row" class:hidden="{!user.is}">
-		<div class="col-sm-7">
+		<div class="col-sm-8">
 			<div id="chart-container" class="m-2">
 				<canvas id="chart"></canvas>
 			</div>
@@ -198,7 +198,7 @@
 				{/each}
 			</div>
 		</div>
-		<div class="col" align="center">
+		<div class="col-sm-4" align="center">
 			<div class="m-2">
 				<button on:click="{newCounter}" class="btn btn-primary m-1">new</button>
 				<button on:click="{logOut}" class="btn btn-primary m-1">log out</button>
