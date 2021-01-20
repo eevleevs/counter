@@ -181,7 +181,7 @@
 </script>
 
 
-<div class="container-fluid">
+<div class="container-fluid m-3">
 	<div class="row" class:hidden="{!user.is}">
 		<div class="col-sm-7">
 			<div><canvas id="chart"></canvas></div>
