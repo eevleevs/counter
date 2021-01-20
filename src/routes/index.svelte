@@ -191,7 +191,7 @@
 				{#each ['d', 'w', 'm', 'y'] as value}
 					<button 
 						on:click="{period.put({value: value})}" 
-						class="btn m-1"
+						class="btn btn-floating m-1"
 						class:btn-primary="{periodValue == value}"
 						class:btn-outline-primary="{periodValue != value}"
 					>{value}</button>
