@@ -183,20 +183,22 @@
 
 <div class="container-fluid m-3">
 	<div class="row" class:hidden="{!user.is}">
-		<div class="col-sm-7">
+		<div class="col-sm-8">
 			<div><canvas id="chart"></canvas></div>
-		</div>
-		<div class="col" align="center">
 			<div class="mt-2">
 				{#each ['d', 'w', 'm', 'y'] as value}
 					<button 
 						on:click="{period.put({value: value})}" 
-						class="btn btn-floating m-1"
+						class="btn m-1"
 						class:btn-primary="{periodValue == value}"
 						class:btn-outline-primary="{periodValue != value}"
 					>{value}</button>
 				{/each}
 			</div>
+		</div>
+		<div class="col" align="center">
+			<button on:click="{newCounter}" class="btn btn-primary m-1">new</button>
+			<button on:click="{logOut}" class="btn btn-primary m-1">log out</button>
 			<table id="counters" class="m-2">
 				{#each Object.entries(countersDict) as [key, name]}
 					<tr id="{key}">
@@ -207,8 +209,6 @@
 					</tr>					
 				{/each}
 			</table>
-			<button on:click="{newCounter}" class="btn btn-primary m-1">new</button>
-			<button on:click="{logOut}" class="btn btn-primary m-1">log out</button>
 		</div>
 	</div>
 	{#if !starting && !user.is}
