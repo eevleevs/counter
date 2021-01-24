@@ -62,8 +62,7 @@ methods: {
 		this.loggedIn = false
 		this.$user.leave()
 		localStorage.setItem('credentials', '')
-		this.names = {}
-		this.values = {}
+		this.counters = {}
 	},
 	newCounter() {
 		let name = prompt('enter name of the counter')

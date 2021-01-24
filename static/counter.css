@@ -1,15 +1,7 @@
 body {
     text-align: center;
-    color: grey;
-    background-color: black;
-}
-
-.btn-floating {
-    color: white;
-}
-
-#chart {
-    width: 100%;
+    color: grey;  /* remove once on server  */
+    background-color: black;  /* remove once on server  */
 }
 
 .hidden {

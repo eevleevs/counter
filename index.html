@@ -6,6 +6,7 @@
 	<meta name="theme-color" content="#333333">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+	<script>$primary = '#aaaaaa'</script>
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.0.0/mdb.min.css" rel="stylesheet" />
 	<link href="static/counter.css" rel="stylesheet" />
 	<title>Counter</title>
@@ -23,7 +24,7 @@
 		<counter-login v-if="!loggedIn" :user="$user" @logged-in="initDB"></counter-login>
 		<div class="row" v-else>
 			<div class="col-sm-8">
-				<counter-chart class="m-2" :colors="colors" :counters="counters" :period="period"></counter-chart>
+				<counter-chart :colors="colors" :counters="counters" :period="period" ref="chart"></counter-chart>
 				<div class="m-2">
 					<button v-for="value in ['d','w','m','y']"
 						@click="period = value" 

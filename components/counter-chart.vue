@@ -1,5 +1,4 @@
 const counterChart = {
-extends: Line,
 props: {
     period: null,
     colors: {},
@@ -11,6 +10,28 @@ watch: {
         handler() { this.update() },
         deep: true,
     }
+},
+mounted() {
+    this.$chart = new Chart(this.$refs.canvas.getContext('2d'), {
+        type: 'line',
+        data: {},
+        options: {
+            animation: false,
+            aspectRatio: 1.5,
+            legend: {
+                display: false,
+            },
+            responsive: true,
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        min: 0,
+                        precision: 0,
+                    }
+                }]
+            }
+        }
+    })
 },
 methods: {
     update() {
@@ -33,12 +54,13 @@ methods: {
             labels: range(-items+1, 1),
         }
     
-        for (let [key,counter] of Object.entries(this.counters)) {
+        for (let counter of Object.values(this.counters)) {
             let dataset = {
                 borderColor: colors.shift(),
                 data: new Array(items).fill(0),
                 fill: false,
-                label: counter.name
+                label: counter.name,
+
             }
             for (let value of Object.values(counter.values)) {
                 let index = Math.floor((nextDay-value) / ms_period)
@@ -47,22 +69,11 @@ methods: {
             }
             data.datasets.push(dataset)
         }
-        console.log(data)
-        this.renderChart(data, {
-            animation: false,
-            aspectRatio: 1.5,
-            legend: {
-                display: false,
-            },
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        min: 0,
-                        precision: 0,
-                    }
-                }]
-            }
-        })
+        this.$chart.data = data
+        this.$chart.update(0)
     },
 },
+template:
+    /*html*/
+    `<canvas ref="canvas"></canvas>`
 }
