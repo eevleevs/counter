@@ -4,6 +4,10 @@ body {
     background-color: black;
 }
 
+.btn-floating {
+    color: white;
+}
+
 #chart {
     width: 100%;
 }
