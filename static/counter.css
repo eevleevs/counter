@@ -1,5 +1,7 @@
 body {
     text-align: center;
+    color: grey;
+    background-color: black;
 }
 
 #chart {

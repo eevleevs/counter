@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1.0">
+	<meta name="theme-color" content="#333333">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.0.0/mdb.min.css" rel="stylesheet" />
+	<link href="static/counter.css" rel="stylesheet" />
+	<title>Counter</title>
+	<script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/gun/lib/open.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/gun/lib/load.js"></script>
+	<script src="https://unpkg.com/vue@next"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+	<script src="static/BaseChart.js"></script>
+	<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+</head>
+<body>
+	<div id="app" class="container mt-3">
+		<counter-login v-if="!loggedIn" :user="$user" @logged-in="initDB"></counter-login>
+		<div class="row" v-else>
+			<div class="col-sm-8">
+				<counter-chart class="m-2" :colors="colors" :counters="counters" :period="period"></counter-chart>
+				<div class="m-2">
+					<button v-for="value in ['d','w','m','y']"
+						@click="period = value" 
+						class="btn m-1"
+						:class="{
+							'btn-primary': period==value,
+							'btn-outline-primary': period!=value,
+						}"
+					>{{value}}</button>
+				</div>
+			</div>
+			<div class="col-sm-4" align="center">
+				<div class="m-2">
+					<button @click="newCounter" class="btn btn-primary m-1">new</button>
+					<button @click="logOut" class="btn btn-primary m-1">log out</button>
+				</div>
+				<table id="counters" class="m-2">
+					<tr v-for="(counter, key, index) in counters" :key="key" :style="{color: colors[index]}">
+						<td>{{counter.name}}</td>
+						<td><button @click="increaseCounter(key)" class="btn btn-secondary btn-floating"><i class="fas fa-plus"></i></button></td>
+						<td><button @click="decreaseCounter(key)" class="btn btn-secondary btn-floating"><i class="fas fa-minus"></i></button></td>
+						<td><button @click="removeCounter(key)" class="btn btn-secondary btn-floating"><i class="fas fa-times"></i></button></td>
+					</tr>					
+				</table>
+			</div>
+		</div>
+	</div>
+	<script src="components/counter-chart.vue"></script>
+	<script src="components/counter-login.vue"></script>
+	<script src="counter.vue"></script>
+	<script>
+		const app = Vue
+			.createApp(counterApp)
+			.mount('#app')
+	</script>
+</body>
+</html>
