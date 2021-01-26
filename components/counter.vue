@@ -1,5 +1,3 @@
-// let gun = Gun(`${window.location.origin}/gun`)
-
 const counterApp = {
 components: {
 	counterChart,
