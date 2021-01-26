@@ -25,7 +25,7 @@ watch: {
 	},
 },
 created() {
-	this.$user = Gun().user()
+	this.$user = Gun(`${window.location.origin}/gun`).user()
 },
 methods: {
 	decreaseCounter(key) {
