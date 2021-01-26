@@ -25,7 +25,7 @@ watch: {
 	},
 },
 created() {
-	this.$user = Gun().user()
+	this.$user = Gun(`${window.location.origin}/gun`).user()
 },
 methods: {
 	decreaseCounter(key) {
@@ -75,7 +75,8 @@ methods: {
 		this.$user.get('counters').set({name: name, values: {}})
 	},
 	removeCounter(key) {
-		this.$user.get('counters').get(key).put(null)
+		if (choice(`remove ${this.counters[key].name}?`))
+			this.$user.get('counters').get(key).put(null)
 	},
 },
 }
