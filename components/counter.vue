@@ -75,7 +75,7 @@ methods: {
 		this.$user.get('counters').set({name: name, values: {}})
 	},
 	removeCounter(key) {
-		if (choice(`remove ${this.counters[key].name}?`))
+		if (confirm(`remove ${this.counters[key].name}?`))
 			this.$user.get('counters').get(key).put(null)
 	},
 },
