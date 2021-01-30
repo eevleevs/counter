@@ -16,30 +16,33 @@
 	<script src="https://cdn.jsdelivr.net/npm/gun/lib/open.js"></script>
 	<script src="https://unpkg.com/vue@next"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
-	<!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
 </head>
 <body>
 	<div id="app" class="container mt-3">
+		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
+			<div class="container-fluid">
+			Counter
+				<ul v-if="loggedIn" class="navbar-nav d-flex flex-row float-right">
+					<li v-for="value in ['d','w','m','y']"
+						@click="period = value" 
+						class="nav-item m-3 font-weight-bold"
+						:class="{
+							'underlined': period==value,
+						}"
+					>{{value.toUpperCase()}}</li>
+					<li @click="newCounter" class="nav-item m-3"><i class="fas fa-plus"></i></li>
+					<li @click="logOut" class="nav-item m-3"><i class="fas fa-sign-in-alt"></i></li>
+				</ul>
+			</div>
+		</nav>
 		<counter-login v-if="!loggedIn" :user="$user" @logged-in="initDB"></counter-login>
 		<div class="row" v-else>
 			<div class="col-sm-8">
 				<counter-chart :colors="colors" :counters="counters" :period="period" ref="chart"></counter-chart>
 				<div class="m-2">
-					<button v-for="value in ['d','w','m','y']"
-						@click="period = value" 
-						class="btn m-1"
-						:class="{
-							'btn-primary': period==value,
-							'btn-outline-primary': period!=value,
-						}"
-					>{{value}}</button>
 				</div>
 			</div>
 			<div class="col-sm-4" align="center">
-				<div class="m-2">
-					<button @click="newCounter" class="btn btn-primary m-1">new</button>
-					<button @click="logOut" class="btn btn-primary m-1">log out</button>
-				</div>
 				<table id="counters" class="m-2">
 					<tr v-for="(counter, key, index) in counters" :key="key" :style="{color: colors[index]}">
 						<td>{{counter.name}}</td>

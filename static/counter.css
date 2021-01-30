@@ -15,3 +15,7 @@ table {
 td {
     padding: 0.25em;
 }
+
+.underlined {
+    text-decoration: underline;
+}
