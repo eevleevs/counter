@@ -18,7 +18,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
 </head>
 <body>
-	<div id="app" class="container mt-3">
+	<div id="app">
 		<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-3">
 			<div class="container-fluid">
 			Counter
@@ -35,22 +35,24 @@
 				</ul>
 			</div>
 		</nav>
-		<counter-login v-if="!loggedIn" :user="$user" @logged-in="initDB"></counter-login>
-		<div class="row" v-else>
-			<div class="col-sm-8">
-				<counter-chart :colors="colors" :counters="counters" :period="period" ref="chart"></counter-chart>
-				<div class="m-2">
+		<div class="container">
+			<counter-login v-if="!loggedIn" :user="$user" @logged-in="initDB"></counter-login>
+			<div class="row" v-else>
+				<div class="col-sm-8">
+					<counter-chart :colors="colors" :counters="counters" :period="period" ref="chart"></counter-chart>
+					<div class="m-2">
+					</div>
 				</div>
-			</div>
-			<div class="col-sm-4" align="center">
-				<table id="counters" class="m-2">
-					<tr v-for="(counter, key, index) in counters" :key="key" :style="{color: colors[index]}">
-						<td>{{counter.name}}</td>
-						<td><button @click="increaseCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-plus"></i></button></td>
-						<td><button @click="decreaseCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-minus"></i></button></td>
-						<td><button @click="removeCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-times"></i></button></td>
-					</tr>					
-				</table>
+				<div class="col-sm-4" align="center">
+					<table id="counters" class="m-2">
+						<tr v-for="(counter, key, index) in counters" :key="key" :style="{color: colors[index]}">
+							<td>{{counter.name}}</td>
+							<td><button @click="increaseCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-plus"></i></button></td>
+							<td><button @click="decreaseCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-minus"></i></button></td>
+							<td><button @click="removeCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-times"></i></button></td>
+						</tr>					
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
