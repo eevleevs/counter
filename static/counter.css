@@ -8,6 +8,10 @@ body {
     display: none;
 }
 
+li.nav-item {
+    cursor: pointer;
+}
+
 table {
     margin: 0 auto;
 }
