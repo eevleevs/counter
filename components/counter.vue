@@ -26,6 +26,9 @@ created() {
 	this.$user = Gun(`${window.location.origin}/gun`).user()
 },
 methods: {
+	changeCounterName(key, event) {
+		this.$user.get('counters').get(key).get('name').put(event.target.value)
+	},
 	decreaseCounter(key) {
 		let entries = Object.entries(this.counters[key].values)
 		if (entries.length)

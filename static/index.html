@@ -46,7 +46,7 @@
 				<div class="col-sm-4" align="center">
 					<table id="counters" class="m-2">
 						<tr v-for="(counter, key, index) in counters" :key="key" :style="{color: colors[index]}">
-							<td>{{counter.name}}</td>
+							<td><input type="text" @change="changeCounterName(key, $event)" :value="counter.name"></input></td>
 							<td><button @click="increaseCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-plus"></i></button></td>
 							<td><button @click="decreaseCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-minus"></i></button></td>
 							<td><button @click="removeCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-times"></i></button></td>
