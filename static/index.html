@@ -35,16 +35,14 @@
 				</ul>
 			</div>
 		</nav>
-		<div class="container">
+		<div class="container m-1">
 			<counter-login v-if="!loggedIn" :user="$user" @logged-in="initDB"></counter-login>
 			<div class="row" v-else>
 				<div class="col-sm-8">
 					<counter-chart :colors="colors" :counters="counters" :period="period" ref="chart"></counter-chart>
-					<div class="m-2">
-					</div>
 				</div>
 				<div class="col-sm-4" align="center">
-					<table id="counters" class="m-2">
+					<table id="counters">
 						<tr v-for="(counter, key, index) in counters" :key="key" :style="{color: colors[index]}">
 							<td><input type="text" @change="changeCounterName(key, $event)" :value="counter.name"></input></td>
 							<td><button @click="increaseCounter(key)" class="btn btn-floating" :style="{backgroundColor: colors[index]}"><i class="fas fa-plus"></i></button></td>

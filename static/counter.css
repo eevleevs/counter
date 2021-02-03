@@ -12,7 +12,8 @@ input[type=text] {
     background-color: inherit;
     border: none;
     color: inherit;
-    width: 5em;
+    text-align: right;
+    width: 7em;
 }
 
 li.nav-item {
