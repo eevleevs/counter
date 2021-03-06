@@ -22,7 +22,6 @@ methods: {
     logIn() {
         this.spin()
         this.user.auth(this.username, this.password, at => {
-            console.log(at)
             if (at.ack) 
                 this.loggedIn()
             else {
