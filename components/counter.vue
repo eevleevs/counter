@@ -15,11 +15,11 @@ data() { return {
 	],
 	counters: {},
 	loggedIn: false,
-	period: 'd',
+	period: localStorage.getItem('period') || 'd',
 }},
 watch: {
 	period() {
-		this.$user.get('period').put({value: this.period})
+		localStorage.setItem('period', this.period)
 	},
 },
 created() {
